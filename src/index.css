@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+html, body {
+    margin: 0;
+    font-family: 'nunito-sans', 'candara';
+    color: #5F6A85;
+    font-size: 12px;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+
+@font-face{
+    font-family: 'nunito';
+    src: local('nunito'), url(./assets/fonts/Nunito/static/Nunito-Regular.ttf) format('truetype');
+  }
+  
+  @font-face{
+    font-family: 'nunito-semibold';
+    src: local('nunito'), url(./assets/fonts/Nunito/static/Nunito-SemiBold.ttf) format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'nunito-sans';
+    src: local('nunito-sans'), url(./assets/fonts/Nunito_Sans/static/NunitoSans_10pt-Regular.ttf) format('truetype');
+  }
+  
+  @font-face {
+    font-family: 'nunito-sans-light';
+    src: local('nunito-sans'), url(./assets/fonts/Nunito_Sans/static/NunitoSans_10pt-Light.ttf) format('truetype');
+  }
