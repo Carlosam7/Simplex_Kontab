@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { FormLogin } from './pages/FormLogin'
 import { FormRegister } from './pages/FormRegister';
-import { SideBarDefault } from './components/sideBar';
 
 function App() {
   return (
