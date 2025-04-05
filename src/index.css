@@ -7,6 +7,7 @@ html, body {
     font-size: 12px;
     min-width: 320px;
     min-height: 100vh;
+    background-color: #FBFCFF;
   }
 
 @font-face{
