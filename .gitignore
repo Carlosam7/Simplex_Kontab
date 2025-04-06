@@ -7,18 +7,36 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependency directories
+node_modules/
+.pnpm/
 
-# Editor directories and files
-.vscode/*
+# Build output
+dist/
+dist-ssr/
+*.local
+build/
+.out/
+
+# Optional npm cache directory
+.npm/
+
+# dotenv environment files
+.env
+.env.*.local
+!.env.example
+
+# IDEs and editors
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS generated files
+Thumbs.db
+ehthumbs.db

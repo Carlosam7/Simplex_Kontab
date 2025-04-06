@@ -1,82 +1,59 @@
 export const columns_productos = [
     {
-        header: "ID",
-        accessorKey: 'id',
+        header: "Código",
+        accessorKey: 'codigo',
+        enableColumnFilter: true,
     },
     {
-        header: "Name",
-        accessorKey: 'name',
+        header: "Nombre producto",
+        accessorKey: 'nombre',
     },
     {
-        header: "lastName",
-        accessorKey: 'LastName',
+        header: "Precio unitario",
+        accessorKey: 'precio_unitario',
     },
     {
-        header: "Email",
-        accessorKey: 'email',
+        header: "Nit proveedor",
+        accessorKey: 'nit_proveedor',
     },
-    {
-        header: "Gender",
-        accessorKey: 'gender',
-    },
-    {
-        header: "BirthDate",
-        accessorKey: 'DateOfBird',
-    }
 ];
 
 export const columns_clientes = [
     {
         header: "ID",
-        accessorKey: 'id',
+        accessorKey: 'id_cliente',
     },
     {
-        header: "Name",
-        accessorKey: 'name',
+        header: "Nombre",
+        accessorKey: 'nombre',
     },
     {
-        header: "lastName",
-        accessorKey: 'LastName',
+        header: "Apellido",
+        accessorKey: 'apellidos',
     },
     {
-        header: "Email",
-        accessorKey: 'email',
+        header: "Fecha de nacimiento",
+        accessorKey: 'fecha_nacimiento',
     },
     {
-        header: "Gender",
-        accessorKey: 'gender',
+        header: "Direccion",
+        accessorKey: 'direccion',
     },
-    {
-        header: "BirthDate",
-        accessorKey: 'DateOfBird',
-    }
 ];
 
 export const columns_proveedores = [
     {
-        header: "ID",
-        accessorKey: 'id',
+        header: "Nit",
+        accessorKey: 'nit',
     },
     {
-        header: "Name",
-        accessorKey: 'name',
+        header: "Nombre",
+        accessorKey: 'nombre',
     },
     {
-        header: "lastName",
-        accessorKey: 'LastName',
+        header: "Dirección",
+        accessorKey: 'direccion',
     },
-    {
-        header: "Email",
-        accessorKey: 'email',
-    },
-    {
-        header: "Gender",
-        accessorKey: 'gender',
-    },
-    {
-        header: "BirthDate",
-        accessorKey: 'DateOfBird',
-    }
 ];
 
 export const columns_pedidos = [

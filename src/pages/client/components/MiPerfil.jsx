@@ -11,7 +11,7 @@ export const MiPerfil = ({ columns_productos }) => {
                 </div>
                 
                 <div className="flex justify-center pt-10">
-                    <FormPedido2 />
+                    <FormPedido2 tableName={ 'cliente' } />
                 </div>
             </div>
 

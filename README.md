@@ -15,3 +15,6 @@ If you are developing a production application, we recommend using TypeScript an
 ## Dependencias
 - npm i react-router-dom
 - npm i @tanstack/react-table
+- npm i express
+- npm i cors
+- npm i mysql2
