@@ -11,8 +11,8 @@ export const Client = () => {
     }
   return (
     <>
-    <div className="flex flex-col items-center justify-center h-screen w-full bg-[#F0F0F0]">
-        <div className="absolute top-0 flex items-center justify-between w-full h-[70px] bg-[#FBFCFF] border-b-1 border-[#b0b0b0] px-[50px]">
+    <div className="flex flex-col z-10 items-center justify-center h-screen w-full bg-[#F0F0F0]">
+        <div className="absolute z-10 top-0 flex items-center justify-between w-full h-[70px] bg-[#FBFCFF] border-b-1 border-[#b0b0b0] px-[50px]">
             <div className="flex items-center w-[full] space-x-20">
                 <section className="flex items-center space-x-4">
                     <div className="w-[40px] h-[40px] bg-[url('./src/assets/img/logo/Logotipo.png')] bg-cover" />

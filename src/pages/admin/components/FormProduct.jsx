@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { data } from 'react-router-dom';
 
 export function FormProduct() {
     const [formData, setFormData] = useState({
         codigo: '',
         nombre: '',
         precio_unitario: '',
-        nit: '',
-        nom_proveedor: '',
+        nit_proveedor: '',
+        nom_proveedor: ''
     });
 
     const [dataProveedor, setDataProveedor] = useState({
@@ -34,77 +33,97 @@ export function FormProduct() {
         }
     };
 
-    const buscarNombreProveedor = async (nit) => {
-        if (formData.nit === '') {
-            setMensaje('Debe ingresar un NIT del proveedor.');
-            alert(mensaje)
+    const handleBuscar = async () => {
+        if (formData.codigo === '') {
+            setMensaje('Debe ingresar el código del producto.');
+            alert('Debe ingresar el código del producto.');
             return;
-        }else{
-            try{
-                console.log(`Buscando proveedor con NIT: ${nit}`);
+        } else {
+            try {
+                console.log(`Buscando producto con código: ${formData.codigo}`);
                 const response = await fetch('http://localhost:3000/searchOnDB', {
                     method: 'POST',
                     headers: {
-                    'Content-Type': 'application/json'
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ table: 'proveedor', PK: 'nit', PKValue: nit })
-                })
-                const data = await response.json()
+                    body: JSON.stringify({ table: 'producto', PK: 'codigo', PKValue: formData.codigo })
+                });
+    
+                const data = await response.json();
+                console.log('precio', data[0].precio_unitario)
+                console.log('Suma', data[0].precio_unitario + 8)
+    
                 if (data.length > 0) {
-                    setDataProveedor(data[0]);
+                    const proveedorData = await buscarNombreProveedor(data[0].nit_proveedor);
+                    
+                    // Actualizamos el estado de los datos del producto y el proveedor
+                    setFormData({
+                        codigo: data[0].codigo,
+                        nombre: data[0].nombre,
+                        precio_unitario: data[0].precio_unitario,
+                        nit_proveedor: data[0].nit_proveedor,
+                        nom_proveedor: proveedorData.nombre // Asegúrate de que `proveedorData` tenga la estructura correcta
+                    });
+    
                     setMensaje('');
                 } else {
-                    setDataProveedor({
-                        nit: '',
+                    setFormData({
                         nombre: '',
-                        direccion: '',
+                        precio_unitario: '',
+                        nit_proveedor: '',
+                        nom_proveedor: ''
                     });
-                    setMensaje('El proveedor no se encontró en la base de datos.');
+                    setMensaje('El producto no se encontró en la base de datos.');
+                    alert('El producto no se encontró en la base de datos.');
                 }
-            }catch (error) {
-                console.error('Error al buscar el proveedor:', error);
-                setMensaje('Error al buscar el proveedor. Intente de nuevo.');
-                alert(mensaje)
+            } catch (error) {
+                console.error('Error al buscar el producto:', error);
+                setMensaje('Error al buscar el producto. Intente de nuevo.');
+                alert('Error al buscar el producto. Intente de nuevo.');
             }
         }
     };
-
-    const fetchDataByCodigo = (codigo, nit) => {
-        console.log(`Buscando datos de código: ${codigo}`);
-        const mockData = {
-            codigo: codigo,
-            nombre: 'CELULAR_NUEVO',
-            precio_unitario: '500000',
-            nit: '123456789',
-            nom_proveedor: '',
-        };
-        const nombre = proveedoresMock[mockData.nit];
-        setFormData({
-            ...mockData,
-            nom_proveedor: nombre || '',
-            proveedorValido: !!nombre
-        });
-
-        if (modo === 'eliminar') {
-            setMensaje("Datos cargados para eliminar.");
-        } else if (modo === 'actualizar') {
-            setMensaje("Datos cargados para actualizar.");
-        }
-    };
-
-    const handleBuscar = () => {
-        if (!formData.codigo) {
-            setMensaje("Debe ingresar el código para buscar.");
+    
+    const buscarNombreProveedor = async (nit) => {
+        if (nit === '') {
+            setMensaje('Debe ingresar un NIT del proveedor.');
+            alert('Debe ingresar un NIT del proveedor.');
             return;
         }
-        if (!codigoValido) {
-            setMensaje("El código debe tener exactamente 4 caracteres alfanuméricos.");
-            return;
+    
+        try {
+            console.log(`Buscando proveedor con NIT: ${nit}`);
+            const response = await fetch('http://localhost:3000/searchOnDB', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ table: 'proveedor', PK: 'nit', PKValue: nit })
+            });
+    
+            const data = await response.json();
+    
+            if (data.length > 0) {
+                setDataProveedor(data[0]);
+                return data[0]; // Asegúrate de que esto devuelve la estructura correcta
+            } else {
+                setDataProveedor({
+                    nit: '',
+                    nombre: '',
+                    direccion: ''
+                });
+                setMensaje('El proveedor no se encontró en la base de datos.');
+                alert('El proveedor no se encontró en la base de datos.');
+                return {}; // Retorna un objeto vacío si no se encuentra el proveedor
+            }
+        } catch (error) {
+            console.error('Error al buscar el proveedor:', error);
+            setMensaje('Error al buscar el proveedor. Intente de nuevo.');
+            alert('Error al buscar el proveedor. Intente de nuevo.');
         }
-        fetchDataByCodigo(formData.codigo, formData.nit);
     };
-
-    const handleSubmit = (e) => {
+    
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!formData.codigo) {
@@ -151,16 +170,85 @@ export function FormProduct() {
                     alert(mensaje)
                 }
             }
-        } else if (modo === 'actualizar') {
-            setMensaje("Datos actualizados correctamente ✅");
-        } else if (modo === 'eliminar') {
-            setMensaje("Producto eliminado correctamente ❌");
             setFormData({
                 codigo: '',
                 nombre: '',
                 precio_unitario: '',
-                nit: '',
+                nit_proveedor: '',
                 nom_proveedor: '',
+            });
+        } else if (modo === 'actualizar') {
+            console.log(formData)
+            if (formData.codigo === '') {
+                setMensaje("No se encontró el producto con el codigo proporcionado.");
+                alert(mensaje);
+                return;
+            
+            }else{
+                try {
+                    console.log('Datos a actualizar:', )
+                    let response
+                    for (let i = 1; i < Object.keys(formData).length; i++) {
+                        response = await fetch('http://localhost:3000/updateTable', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        
+                        body: JSON.stringify({ table: 'producto', column: Object.keys(formData)[i], newColumnValue: formData[Object.keys(formData)[i]] , primaryKey: 'codigo', PKValue: formData.codigo })
+                    })
+                    }
+              
+                }catch (error) {
+                    alert('Error al insertar. Verifique que no exista un dato con esta llave primaria')
+                    console.error('🔴 Error al insertar:', error)
+                    message.error('Error al insertar. Verifique que no exista un dato con esta llave primaria')
+                }
+            }
+
+            setFormData({
+                codigo: '',
+                nombre: '',
+                precio_unitario: '',
+                nit_proveedor: '',
+                nom_proveedor: '',
+            });
+            
+        } else if (modo === 'eliminar') {
+            setMensaje("Producto eliminado correctamente ❌");
+            if (formData.nit === '') {
+                setMensaje("No se encontró el producto con el codigo proporcionado.");
+                alert(mensaje);
+                return;
+            }else{
+                try{
+                    const response = await fetch('http://localhost:3000/deleteFromTable', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ table: 'producto', PK: 'codigo', PKValue: formData.codigo })
+                    })
+                
+                    const result = await response.json()
+                
+                    if (response.status != 200){
+                        throw new Error('No se eliminaron datos en la tabla')
+                    }else{
+                        console.log('🟢 Eliminado con éxito:', result)
+                        alert('¡Datos eliminados con éxito, llave! 🎉')
+                    }
+                }catch (error) {
+                    alert('Error al eliminar. Verifique que no exista un dato con esta llave primaria')
+                    console.error('🔴 Error al eliminar:', error)
+                }
+            }
+            setFormData({
+                codigo: '',
+                nombre: '',
+                precio_unitario: '',
+                nit_proveedor: '',
+                nom_proveedor: 'No proveedor',
             });
         }
         console.log("Acción:", modo, "Datos:", formData);
@@ -225,7 +313,7 @@ export function FormProduct() {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-900">NIT Proveedor:</label>
-                    <input type="text" name="nit" value={dataProveedor.nit} onChange={handleChange}
+                    <input type="text" name="nit" value={(modo==='agregar' || modo==='eliminar')?formData.nit_proveedor:dataProveedor.nit} onChange={handleChange}
                         disabled={camposDeshabilitados.nit}
                         readOnly={camposDeshabilitados.nit}
                         className="mt-1 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 sm:text-sm" />
