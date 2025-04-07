@@ -1,12 +1,12 @@
 import express from 'express'
 import cors from 'cors'
-import { consult1, insertinto, getTable } from './requests.mjs'
+import { consult1, insertinto, getTable, searchOnDB, updateTable, deleteFromTable } from './requests.mjs'
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
 
-app.use(cors()) // ← permite que tu frontend acceda
-app.use(express.json()) // ← permite leer JSON del body
+app.use(cors())
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.send('Hola esteban')
@@ -46,4 +46,44 @@ app.post('/getTable', async (req, res) => {
     } catch (err) {
       res.status(500).json({error: 'error', err})
     }
+})
+
+app.post('/searchOnDB', async (req, res) => {
+  const { table, PK, PKValue } = req.body
+
+  try {
+    const result = await searchOnDB(table, PK, PKValue)
+    res.status(200).json( result )
+  } catch (error) {
+    console.log('❌ No se encontro este registro', error)
+    res.status(400).json({error: 'error al buscar registro', error})
+  }
+})
+
+app.post('/updateTable', async (req, res) => {
+  const { table, column, newColumnValue, primaryKey, PKValue } = req.body
+
+  try {
+    const result = await updateTable(table, column, newColumnValue, primaryKey, PKValue)
+    res.status(200).json({ message: 'Actualizado correctamente: ', result })
+  } catch (error) {
+    console.log('❌ Error a nivel de servidor: ', error)
+    res.status(400).json({error: 'error al insertar los datos', error})
+  }
+})
+
+app.post('/deleteFromTable', async (req, res) => {
+  const { table, PK, PKValue } = req.body
+
+  try {
+    if (table == 'cliente') {
+      await deleteFromTable('compra', 'id_cliente', PKValue)
+    }
+
+    const result = await deleteFromTable(table, PK, PKValue)
+    res.status(200).json({ message: 'Fila eliminada correctamente: ', result })
+  } catch (error) {
+    console.log('❌ Error a nivel de servidor: ', error)
+    res.status(400).json({error: 'error al insertar los datos', error})
+  }
 })

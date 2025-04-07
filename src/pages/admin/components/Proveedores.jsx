@@ -2,8 +2,7 @@ import { useState } from "react"
 import { TableComponent } from "../../../components/TableComponent"
 import { columns_proveedores } from "../hook/Tables"
 import { useEffect } from "react"
-
-import { FormPerson } from "./FormPerson"
+import { FormProveedor } from "./FormProveedor"
 
 
 export const Proveedores = () => {
@@ -25,9 +24,9 @@ export const Proveedores = () => {
         });
         setData(json.result)
 
-        // if (response.ok) {
-        //     await getData()
-        // }
+        if (response.ok) {
+            await getData()
+        }
     }
 
     useEffect(() => {
@@ -39,11 +38,11 @@ export const Proveedores = () => {
             
             <div className="bg-gray-100 px-[100px] py-[50px]  ">
                 <div className="flex items-center w-full">
-                    <h1 className="text-3xl font-bold text-gray-800"> Información Cliente </h1>
+                    <h1 className="text-3xl font-bold text-gray-800"> Modificar Proveedor </h1>
                 </div>
                 
                 <div className="flex justify-center pt-10">
-                    <FormPerson tableName={ 'cliente' } />
+                    <FormProveedor tableName={ 'proveedor' } />
                 </div>
             </div>
             

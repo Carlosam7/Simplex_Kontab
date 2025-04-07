@@ -1,7 +1,7 @@
 import { Button, Input } from "@material-tailwind/react";
 import { useReactTable, getCoreRowModel, flexRender, getFilteredRowModel } from "@tanstack/react-table";
 import { useState } from "react";
-export function TableComponent({columna, data}) {
+export function TableComponent({columna, data, texto}) {
     const [filter, setFilter] = useState("");
     const columns = columna
     const table = useReactTable({data, 
@@ -16,10 +16,10 @@ export function TableComponent({columna, data}) {
 
 
     return(
-        <div className="flex flex-col w-[90%] h-[90%] min-h-[400px] px-[100px] py-[50px] bg-linear-to-t from-[#f0f0f0] to-[#FFF] rounded-2xl rounded-l-none shadow-lg overflow-hidden">
+        <div className={`flex flex-col w-[90%] h-[90%] min-h-[400px] px-[100px] py-[50px] bg-linear-to-t ${texto == 'Productos disponibles'?NaN:'from-[#f0f0f0] to-[#FFF] shadow-lg'} rounded-2xl rounded-l-none overflow-hidden`}>
             <section className="flex w-full justify-between items-center">
                 <div className="flex items-center w-full">
-                    <h1 className="text-3xl font-bold text-gray-800">Clientes</h1>
+                    <h1 className="text-3xl font-bold text-gray-800">{texto}</h1>
                 </div>
                 <div className="flex items-center justify-end space-x-5">
                     <div className="flex items-center justify-end w-full">

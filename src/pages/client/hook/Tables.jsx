@@ -1,26 +1,18 @@
 export const columns_productos = [
     {
-        header: "ID",
-        accessorKey: 'id',
+        header: "Código",
+        accessorKey: 'codigo',
     },
     {
-        header: "Name",
-        accessorKey: 'name',
+        header: "Producto",
+        accessorKey: 'nombre',
     },
     {
-        header: "lastName",
-        accessorKey: 'LastName',
+        header: "Precio unitario",
+        accessorKey: 'precio_unitario',
     },
     {
-        header: "Email",
-        accessorKey: 'email',
+        header: "Nit proveedor",
+        accessorKey: 'nit_proveedor',
     },
-    {
-        header: "Gender",
-        accessorKey: 'gender',
-    },
-    {
-        header: "BirthDate",
-        accessorKey: 'DateOfBird',
-    }
 ]

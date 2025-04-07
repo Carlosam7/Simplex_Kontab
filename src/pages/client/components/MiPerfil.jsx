@@ -14,15 +14,6 @@ export const MiPerfil = ({ columns_productos }) => {
                     <FormPedido2 tableName={ 'cliente' } />
                 </div>
             </div>
-
-            <div className="flex flex-col w-full h-full px-[100px] py-[50px]">
-                <div className="flex items-center w-full ">
-                    <h1 className="text-3xl font-bold text-gray-800">Productos</h1>
-                </div>
-                <div className="flex justify-center w-full overflow-auto mt-[20px] border border-gray-200 rounded-lg shadow-lg ">
-                    <TableComponent columna={ columns_productos } data = { data } />
-                </div>
-            </div>
         </div>
     )
 }

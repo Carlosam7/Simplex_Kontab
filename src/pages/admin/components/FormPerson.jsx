@@ -11,6 +11,14 @@ export function FormPerson({ tableName }) {
         num_direccion: '',
         edad: ''
     });
+    const [clienteInfo, setClienteInfo] = useState({
+        id_cliente: '',
+        nombre: '',
+        apellidos: '',
+        fecha_nacimiento: '',
+        direccion: '',
+    }
+    );
 
     const [modo, setModo] = useState(''); // agregar, actualizar, eliminar
     const [mensaje, setMensaje] = useState('');
@@ -40,32 +48,51 @@ export function FormPerson({ tableName }) {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
     };
-    //CONSULTA
-    const fetchDataById = (id) => {
-        console.log(`Buscando datos de ID: ${id}`);
-        const mockData = {
-            id: id,
-            nombre: 'Juan',
-            apellido: 'Pérez',
-            fecha_nacimiento: '2000-05-15',
-            ciudad: 'Barranquilla',
-            tipo_via: 'Calle',
-            num_direccion: '45B-123',
-            edad: calcularEdad('2000-05-15').toString()
-        };
-        setFormData(mockData);
-        if (modo === 'eliminar') {
-            setMensaje("Datos cargados para eliminar.");
-        } else if (modo === 'actualizar') {
-            setMensaje("Datos cargados para actualizar.");}
-    };
 
-    const handleBuscar = () => {
+    const handleBuscar = async () => {
+        console.log(formData)
         if (!formData.id) {
             setMensaje("Debe ingresar el ID para buscar.");
             return;
         }
-        fetchDataById(formData.id);
+        //fetchDataById(formData.id);
+        try {
+            const response = await fetch('http://localhost:3000/searchOnDB', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ table: 'cliente', PK: 'id_cliente', PKValue: formData.id })
+            })
+        
+            const data = await response.json()
+            if (data.length > 0) {
+                console.log(data[0])
+                const direccion = data[0].direccion.split(" ");
+                const tipo_via = direccion[0];
+                const num_direccion = direccion[1];
+                const ciudad = direccion[2];
+                const fecha_nacimiento = data[0].fecha_nacimiento.split("T")[0];
+                setFormData({
+                    id: data[0].id_cliente,
+                    nombre: data[0].nombre,
+                    apellido: data[0].apellidos,
+                    fecha_nacimiento: fecha_nacimiento,
+                    ciudad: ciudad,
+                    tipo_via: tipo_via,
+                    num_direccion: num_direccion,
+                    edad: calcularEdad(data[0].fecha_nacimiento).toString()
+                });
+                setClienteInfo(data[0]);
+                setMensaje('');
+            } else {
+                setClienteInfo({id_cliente: '', nombre: '', apellidos: '', fecha_nacimiento: '', direccion: '', tipo_via: '', num_direccion: ''});
+                setMensaje('El cliente no se encontró en la base de datos.');
+            }
+            } catch (error) {
+            console.error('❌ Error a nivel de frontend:', error)
+            }
+        
     };
 
     const handleSubmit = async (e) => {
@@ -115,9 +142,74 @@ export function FormPerson({ tableName }) {
             
             setMensaje("Usuario agregado correctamente ✅");
         } else if (modo === 'actualizar') {
+            console.log(clienteInfo)
+            if (clienteInfo.id_cliente === '') {
+                setMensaje("No se encontró el cliente con el ID proporcionado.");
+                alert(mensaje);
+                return;
+            
+            }else{
+                try {
+                    console.log('Datos a actualizar:', )
+                    const dataCliente = {
+                        nombre: formData.nombre,
+                        apellidos: formData.apellido,
+                        fecha_nacimiento: formData.fecha_nacimiento,
+                        direccion: formData.tipo_via + " " + formData.num_direccion + " " + formData.ciudad,
+                    }
+                    console.log('Datos cliente')
+                    console.log(dataCliente)
+                    let response
+                    for (let i = 0; i < Object.keys(dataCliente).length; i++) {
+                        response = await fetch('http://localhost:3000/updateTable', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        
+                        body: JSON.stringify({ table: tableName, column: Object.keys(dataCliente)[i], newColumnValue: dataCliente[Object.keys(dataCliente)[i]] , primaryKey: 'id_cliente', PKValue: formData.id })
+                    })
+                    }
+                    console.log('🟢 Insertado con éxito:')
+                    alert('¡Datos actualizados con éxito, llave! 🎉')
+                    }
+                    catch (error) {
+                        alert('Error al insertar. Verifique que no exista un dato con esta llave primaria')
+                        console.error('🔴 Error al insertar:', error)
+                    }
+            }
+                
+
             
             setMensaje("Datos actualizados correctamente ✅");
         } else if (modo === 'eliminar') {
+            if (clienteInfo.id_cliente === '') {
+                setMensaje("No se encontró el cliente con el ID proporcionado.");
+                alert(mensaje);
+                return;
+            }else{
+                try{
+                    const response = await fetch('http://localhost:3000/deleteFromTable', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ table: tableName, PK: 'id_cliente', PKValue: formData.id })
+                    })
+                
+                    const result = await response.json()
+                
+                    if (response.status != 200){
+                        throw new Error('No se eliminaron datos en la tabla')
+                    }
+                
+                    console.log('🟢 Eliminado con éxito:', result)
+                    alert('¡Datos eliminados con éxito, llave! 🎉')
+                }catch (error) {
+                    alert('Error al eliminar. Verifique que no exista un dato con esta llave primaria')
+                    console.error('🔴 Error al eliminar:', error)
+                }
+            }
             setMensaje("Usuario eliminado correctamente ❌");
             setFormData({
                 id: '',
@@ -137,7 +229,6 @@ export function FormPerson({ tableName }) {
         id: modo === '',
         nombre: !(modo === 'agregar' || modo === 'actualizar'),
         apellido: !(modo === 'agregar' || modo === 'actualizar'),
-        fecha_nacimiento: !(modo === 'agregar' || modo === 'actualizar'),
         ciudad: !(modo === 'agregar' || modo === 'actualizar'),
         tipo_via: !(modo === 'agregar' || modo === 'actualizar'),
         num_direccion: !(modo === 'agregar' || modo === 'actualizar'),
@@ -195,8 +286,6 @@ export function FormPerson({ tableName }) {
                 <div>
                     <label className="block text-sm font-medium text-gray-900">Fecha de nacimiento:</label>
                     <input type="date" name="fecha_nacimiento" value={formData.fecha_nacimiento} onChange={handleChange}
-                        disabled={camposDeshabilitados.fecha_nacimiento}
-                        readOnly={camposDeshabilitados.fecha_nacimiento}
                         className="mt-1 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 sm:text-sm" />
                 </div>
 

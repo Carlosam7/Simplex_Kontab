@@ -18,3 +18,4 @@ If you are developing a production application, we recommend using TypeScript an
 - npm i express
 - npm i cors
 - npm i mysql2
+- npm i nodemon

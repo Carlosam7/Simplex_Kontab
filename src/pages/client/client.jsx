@@ -20,7 +20,7 @@ export const Client = () => {
 
                 <section className="flex items-center space-x-4">
                     <div className="flex items-center justify-center w-[100px] h-[70px] hover:bg-[#F0F0F0]">
-                    <Button onClick={()=>{handlePageChange('Ayuda')}} className="text-gray-600 hover:text-[#7BA8FF] w-full h-[70px] shadow-none">Inicio</Button>
+                    <Button onClick={()=>{handlePageChange('Inicio')}} className="text-gray-600 hover:text-[#7BA8FF] w-full h-[70px] shadow-none">Inicio</Button>
                     </div>
                     <div className="flex items-center justify-center w-[100px] h-[70px] hover:bg-[#F0F0F0]">
                     <Button onClick={()=>{handlePageChange('Mi perfil')}} className="text-gray-600 hover:text-[#7BA8FF] w-full h-[70px] shadow-none">Mi perfil</Button>

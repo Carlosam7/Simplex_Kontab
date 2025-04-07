@@ -12,6 +12,6 @@ export function ShowPages(page) {
         case "Ayuda":
             return <h1>Ayuda</h1>;
         default:
-            return <Inicio />;
+            return <Inicio/>;
     }
 }

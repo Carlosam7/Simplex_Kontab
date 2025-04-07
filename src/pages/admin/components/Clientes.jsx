@@ -23,14 +23,10 @@ export const Clientes = () => {
         });
         setData(json.result)
 
-        // if (response.ok) {
-        //     await getData()
-        // }
+        if (response.ok) {
+            await getData()
+        }
     }
-
-    useEffect(() => {
-        getData()
-    }, [])
     return (
         <>
 

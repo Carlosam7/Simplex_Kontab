@@ -3,6 +3,7 @@ import { TableComponent } from "../../../components/TableComponent"
 import { columns_productos } from "../hook/Tables"
 import { useEffect } from "react";
 import { FormPerson } from "./FormPerson";
+import { FormProduct } from "./FormProduct";
 
 export const Productos = () => {
     const [data, setData] = useState([])
@@ -23,9 +24,9 @@ export const Productos = () => {
         });
         setData(json.result)
 
-        // if (response.ok) {
-        //     await getData()
-        // }
+        if (response.ok) {
+            await getData()
+        }
     }
 
     useEffect(() => {
@@ -43,7 +44,7 @@ export const Productos = () => {
                 </div>
                 
                 <div className="flex justify-center pt-10">
-                    <FormPerson tableName={ 'cliente' } />
+                    <FormProduct tableName={ 'producto' } />
                 </div>
             </div>
             

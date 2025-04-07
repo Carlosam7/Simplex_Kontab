@@ -158,3 +158,51 @@ export async function getTable(table) {
       await connection.end()
     }
   }
+
+export async function searchOnDB(table, PK, PKValue) {
+  const connection = await mysql.createConnection(dbconfig)
+
+  try {
+    const query = `SELECT * FROM ?? WHERE ?? = ?`
+    const [results] = await connection.query(query, [table, PK, PKValue])
+
+    return results
+  } catch (error) {
+    console.error('❌ Error a nivel de backend ', error)
+    throw error
+  } finally {
+    await connection.end()
+  }
+}
+
+export async function updateTable(table, column, newColumnValue, primaryKey, PKValue) {
+  const connection = await mysql.createConnection(dbconfig)
+
+  try {
+    const query = `UPDATE ?? SET ?? = ? WHERE ?? = ?`
+    const [results] = await connection.query(query, [table, column, newColumnValue, primaryKey, PKValue])
+
+    return results
+  } catch (error) {
+    console.error('❌ Error a nivel de backend ', error)
+    throw error
+  } finally {
+    await connection.end()
+  }
+}
+
+export async function deleteFromTable(table, PK, PKValue) {
+  const connection = await mysql.createConnection(dbconfig)
+
+  try {
+    const query = `DELETE FROM ?? WHERE ?? = ?`
+    const [results] = await connection.query(query, [table, PK, PKValue])
+
+    return results
+  } catch (error) {
+    console.error('❌ Error a nivel de backend ', error)
+    throw error
+  } finally {
+    await connection.end()
+  }
+}
