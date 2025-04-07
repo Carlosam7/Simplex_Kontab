@@ -14,9 +14,8 @@ export function TableComponent({columna, data, texto}) {
                             
                             );
 
-
     return(
-        <div className={`flex flex-col w-[90%] h-[90%] min-h-[400px] px-[100px] py-[50px] bg-linear-to-t ${texto == 'Productos disponibles'?NaN:'from-[#f0f0f0] to-[#FFF] shadow-lg'} rounded-2xl rounded-l-none overflow-hidden`}>
+        <div className={`flex flex-col w-[90%] h-[90%] min-h-[400px] px-[100px] py-[50px] bg-linear-to-t ${texto == ('Productos disponibles' || 'Proveedores y productos' || 'Clientes sin pedidos' || 'Cantidad de pedidos' || 'Pedidos por cliente') ? '':'from-[#f0f0f0] to-[#FFF] shadow-lg'} rounded-2xl rounded-l-none overflow-hidden`}>
             <section className="flex w-full justify-between items-center">
                 <div className="flex items-center w-full">
                     <h1 className="text-3xl font-bold text-gray-800">{texto}</h1>
@@ -31,9 +30,7 @@ export function TableComponent({columna, data, texto}) {
                         placeholder="Buscar" 
                         className="border-gray-300"/>
                     </div>
-                    <div className="flex items-center justify-end">
-                        <Button className="flex items-center justify-center w-[100px] bg-[#7BA8FF] text-white px-[15px] py-[10px] rounded-[5px] cursor-pointer shadow-none">+ Producto</Button>
-                    </div>
+                    
                 </div>
             </section>
 

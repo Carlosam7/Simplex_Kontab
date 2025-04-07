@@ -17,11 +17,6 @@ export const Productos = () => {
             body: JSON.stringify({ table: 'producto' })
           })
         const json = await response.json()
-        //Formatear fecha
-        json.result.forEach((element) => {
-            const date = new Date(element.fecha_nacimiento);
-            element.fecha_nacimiento = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-        });
         setData(json.result)
 
         if (response.ok) {
@@ -40,7 +35,7 @@ export const Productos = () => {
             
             <div className="bg-gray-100 px-[100px] py-[50px]  ">
                 <div className="flex items-center w-full">
-                    <h1 className="text-3xl font-bold text-gray-800"> Información Cliente </h1>
+                    <h1 className="text-3xl font-bold text-gray-800"> Información Productos </h1>
                 </div>
                 
                 <div className="flex justify-center pt-10">

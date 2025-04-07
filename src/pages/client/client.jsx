@@ -1,6 +1,7 @@
 import { Button } from "@material-tailwind/react";
 import { useState } from "react";
 import { ShowPages } from "./hook/ShowPages";
+import { Link } from "react-router-dom";
 
 export const Client = () => {
 
@@ -34,7 +35,7 @@ export const Client = () => {
                 
             </div>
             <div className="flex items-center">
-                <Button className="flex bg-[#7BA8FF] text-white px-[15px] py-[10px] rounded-[5px] cursor-pointer">Logout</Button>
+                <Button className="flex bg-[#7BA8FF] text-white px-[15px] py-[10px] rounded-[5px] cursor-pointer"><Link to={'/'}>Logout</Link></Button>
             </div>
         </div>
         <div className="flex items-end justify-center w-full h-screen p-[50px] bg-[#F0F0F0]">

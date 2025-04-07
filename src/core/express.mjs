@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { consult1, insertinto, getTable, searchOnDB, updateTable, deleteFromTable } from './requests.mjs'
+import { consult1, insertinto, getTable, searchOnDB, updateTable, deleteFromTable, consult2, consult3, consult4, consultGrap } from './requests.mjs'
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
@@ -85,5 +85,41 @@ app.post('/deleteFromTable', async (req, res) => {
   } catch (error) {
     console.log('❌ Error a nivel de servidor: ', error)
     res.status(400).json({error: 'error al insertar los datos', error})
+  }
+})
+
+app.get('/op2', async (req, res) => {
+  try {
+    const results = await consult2()
+    res.json(results)
+  } catch (err) {
+    res.status(500).json({ error: 'error al obtener los datos' })
+  }
+})
+
+app.get('/op3', async (req, res) => {
+  try {
+    const results = await consult3()
+    res.json(results)
+  } catch (err) {
+    res.status(500).json({ error: 'error al obtener los datos' })
+  }
+})
+
+app.get('/op4', async (req, res) => {
+  try {
+    const results = await consult4()
+    res.json(results)
+  } catch (err) {
+    res.status(500).json({ error: 'error al obtener los datos' })
+  }
+})
+
+app.get('/op12', async (req, res) => {
+  try {
+    const results = await consultGrap()
+    res.json(results)
+  } catch (err) {
+    res.status(500).json({ error: 'error al obtener los datos' })
   }
 })

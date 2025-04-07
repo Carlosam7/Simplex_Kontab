@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { data } from 'react-router-dom';
 
 export function FormProduct() {
     const [formData, setFormData] = useState({
@@ -7,7 +8,12 @@ export function FormProduct() {
         precio_unitario: '',
         nit: '',
         nom_proveedor: '',
-        proveedorValido: false,
+    });
+
+    const [dataProveedor, setDataProveedor] = useState({
+        nit: '',
+        nombre: '',
+        direccion: ''
     });
 
     const [modo, setModo] = useState('');
@@ -21,33 +27,45 @@ export function FormProduct() {
             [name]: value
         });
 
-        if (name === 'nit' && value.length >= 6) {
+        setDataProveedor({dataProveedor,});
+
+        if (name === 'nit' && (value.length == 10)) {
             buscarNombreProveedor(value);
         }
     };
 
-    const proveedoresMock = {
-        '123456789': 'PROVEEDOR TECH S.A.S',
-        '987654321': 'INVERSIONES DIGITALES',
-        '456123789': 'PLASTICOL LTDA',
-    };
-
-    const buscarNombreProveedor = (nit) => {
-        const nombre = proveedoresMock[nit];
-        if (nombre) {
-            setFormData(prev => ({ 
-                ...prev, 
-                nom_proveedor: nombre, 
-                proveedorValido: true 
-            }));
-            setMensaje('');
-        } else {
-            setFormData(prev => ({ 
-                ...prev, 
-                nom_proveedor: '', 
-                proveedorValido: false 
-            }));
-            setMensaje('Proveedor no encontrado.');
+    const buscarNombreProveedor = async (nit) => {
+        if (formData.nit === '') {
+            setMensaje('Debe ingresar un NIT del proveedor.');
+            alert(mensaje)
+            return;
+        }else{
+            try{
+                console.log(`Buscando proveedor con NIT: ${nit}`);
+                const response = await fetch('http://localhost:3000/searchOnDB', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ table: 'proveedor', PK: 'nit', PKValue: nit })
+                })
+                const data = await response.json()
+                if (data.length > 0) {
+                    setDataProveedor(data[0]);
+                    setMensaje('');
+                } else {
+                    setDataProveedor({
+                        nit: '',
+                        nombre: '',
+                        direccion: '',
+                    });
+                    setMensaje('El proveedor no se encontró en la base de datos.');
+                }
+            }catch (error) {
+                console.error('Error al buscar el proveedor:', error);
+                setMensaje('Error al buscar el proveedor. Intente de nuevo.');
+                alert(mensaje)
+            }
         }
     };
 
@@ -100,17 +118,38 @@ export function FormProduct() {
         }
 
         if (modo === 'agregar') {
-            const camposObligatorios = ['codigo', 'nombre', 'precio_unitario', 'nit'];
-            const camposVacios = camposObligatorios.filter(campo => formData[campo] === '');
+            if(dataProveedor.nit === ''){
+                setMensaje("El NIT del proveedor no es válido.");
+                alert(mensaje)
+                return;
+            }else{
+                const infoProducto = {
+                    codigo: formData.codigo,
+                    nombre: formData.nombre,
+                    precio_unitario: formData.precio_unitario,
+                    nit_proveedor: dataProveedor.nit,
+                }
+                try{
+                    const response = fetch('http://localhost:3000/insert', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({table: 'producto', data: infoProducto}) 
+                        })
+                    if (response.ok) {
+                        setMensaje("Producto agregado correctamente ✅");
+                    }
+                    else {
+                        setMensaje("Error al agregar el producto. Intente de nuevo.");
+                    }
 
-            if (camposVacios.length > 0) {
-                setMensaje("Por favor, complete todos los campos obligatorios.");
-                return;
-            } else if (!formData.proveedorValido) {
-                setMensaje("El proveedor del producto no es válido.");
-                return;
-            } else {
-                setMensaje("Producto agregado correctamente ✅");
+
+                }catch (error) {
+                    console.error('Error al agregar el producto:', error);
+                    setMensaje("Error al agregar el producto. Intente de nuevo.");
+                    alert(mensaje)
+                }
             }
         } else if (modo === 'actualizar') {
             setMensaje("Datos actualizados correctamente ✅");
@@ -122,7 +161,6 @@ export function FormProduct() {
                 precio_unitario: '',
                 nit: '',
                 nom_proveedor: '',
-                proveedorValido: false
             });
         }
         console.log("Acción:", modo, "Datos:", formData);
@@ -150,7 +188,6 @@ export function FormProduct() {
                                 precio_unitario: '',
                                 nit: '',
                                 nom_proveedor: '',
-                                proveedorValido: false
                             });
                             setMensaje('');
                         }}
@@ -188,7 +225,7 @@ export function FormProduct() {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-900">NIT Proveedor:</label>
-                    <input type="text" name="nit" value={formData.nit} onChange={handleChange}
+                    <input type="text" name="nit" value={dataProveedor.nit} onChange={handleChange}
                         disabled={camposDeshabilitados.nit}
                         readOnly={camposDeshabilitados.nit}
                         className="mt-1 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 sm:text-sm" />
@@ -196,7 +233,7 @@ export function FormProduct() {
 
                 <div>
                     <label className="block text-sm font-medium text-gray-900">Nombre Proveedor:</label>
-                    <input type="text" name="nom_proveedor" value={formData.nom_proveedor}
+                    <input type="text" name="nom_proveedor" value={dataProveedor.nombre}
                         readOnly
                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-1.5 bg-gray-100" />
                 </div>

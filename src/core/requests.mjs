@@ -31,18 +31,19 @@ const dbconfig = {
 // ------------------------------------------------------------------------------------------
 
 // • CONSULTA 1. Una consulta que muestre los clientes y la cantidad de pedidos realizados.
+// • CONSULTA 1. Una consulta que muestre los clientes y la cantidad de pedidos realizados.
 export async function consult1 () {
   const connection = await mysql.createConnection(dbconfig)
 
   try {
     const [results] = await connection.query(
-      `select 
-        id_cliente, 
-        concat(nombre, ' ', apellido) as nombre, 
-        count(*) as pedidos_realizados 
-      from compra 
-      join cliente on id = id_cliente 
-      group by id_cliente, nombre`
+      `SELECT 
+        cl.id_cliente, 
+        CONCAT(cl.nombre, ' ', cl.apellidos) AS nombre_cliente, 
+        COUNT(*) AS pedidos_realizados 
+      FROM compra cp
+      JOIN cliente cl ON cp.id_cliente = cl.id_cliente 
+      GROUP BY cl.id_cliente, cl.nombre, cl.apellidos`
     )
     return results
   } catch {
@@ -76,25 +77,25 @@ export async function consult3 () {
 
   try {
     const [results] = await connection.query(
-      `select 
-        concat(cl.nombre, ' ', cl.apellido) as nombre_cliente,
-        pr.nombre as nombre_producto,
-        cantidad,
-        cantidad * pr.precio_unitario as precio_compra,
-        pv.nombre as nombre_proveedor
-      from compra cp
-      join producto pr on pr.codigo = cp.codigo_producto
-      join cliente cl on cl.id = cp.id_cliente
-      join suministros sm on sm.codigo_producto = pr.codigo
-      join proveedor pv on pv.nit = sm.nit_proveedor`
+      `SELECT 
+        CONCAT(cl.nombre, ' ', cl.apellidos) AS nombre_cliente,
+        pr.nombre AS nombre_producto,
+        cp.cantidad,
+        cp.cantidad * pr.precio_unitario AS precio_compra,
+        pv.nombre AS nombre_proveedor
+      FROM compra cp
+      JOIN producto pr ON pr.codigo = cp.codigo_producto
+      JOIN cliente cl ON cl.id_cliente = cp.id_cliente
+      JOIN proveedor pv ON pv.nit = pr.nit_proveedor`
     )
     return results
-  } catch {
-    console.error('error al consultar la tabla: ', error)
+  } catch (error) {
+    console.error('Error al consultar la tabla: ', error)
   } finally {
     await connection.end()
   }
 }
+
 
 // • CONSULTA 4. Listado de los proveedores con los productos suministrados.
 export async function consult4 () {
@@ -102,14 +103,13 @@ export async function consult4 () {
 
   try {
     const [results] = await connection.query(
-      `select
-        pv.nit as nit_proveedor,
-        pv.nombre as nombre_proveedor,
-        pr.codigo as codigo_producto,
-        pr.nombre as nombre_producto
-      from suministros sm
-      join proveedor pv on pv.nit = sm.nit_proveedor
-      join producto pr on pr.codigo = sm.codigo_producto`
+      `SELECT
+        pv.nit AS nit_proveedor,
+        pv.nombre AS nombre_proveedor,
+        pr.codigo AS codigo_producto,
+        pr.nombre AS nombre_producto
+        FROM Proveedor pv
+        JOIN Producto pr on pr.nit_proveedor = pv.nit`
     )
     return results
 
@@ -202,6 +202,27 @@ export async function deleteFromTable(table, PK, PKValue) {
   } catch (error) {
     console.error('❌ Error a nivel de backend ', error)
     throw error
+  } finally {
+    await connection.end()
+  }
+}
+
+// • CONSULTA GRAFICA. Listado de los proveedores con los productos suministrados.
+export async function consultGrap() {
+  const connection = await mysql.createConnection(dbconfig)
+
+  try {
+    const [results] = await connection.query(
+      `select p.nombre, sum(cantidad) as compras 
+        from compra 
+        join producto p on p.codigo = codigo_producto
+        group by codigo_producto
+        order by compras desc`
+    )
+    return results
+
+  } catch {
+    console.error('error al consultar la tabla: ', error)
   } finally {
     await connection.end()
   }

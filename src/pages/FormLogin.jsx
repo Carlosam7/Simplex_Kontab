@@ -3,7 +3,23 @@ import { logoSoftware, txtInput } from "../components/ComponentsForm"
 import { ButtonMateDark, CheckboxRippleEffect } from "../components/buttons"
 
 
-export const FormLogin = () =>{
+export const FormLogin = ({admin}) =>{
+
+    const iniciarSesion = async (e) => {
+        e.preventDefault()
+        const user = document.getElementById('txtUserL').value
+        const password = document.getElementById('txtPasswordL').value
+
+        if(user === admin.name && password === admin.password){
+            alert('Bienvenido')
+            // Redireccionar a la página de administración
+            window.location.href = '/admin'
+        }else{
+            // Redireccionar a la página de cliente
+            window.location.href = '/client'
+        }
+    }
+
     return(
         <>
         <div className='  flex flex-col items-center justify-center bg-gradient-to-b from-[#F5F5F5] to-[#D0DDFF] min-w-[280px] min-h-screen p-5'>
@@ -21,7 +37,7 @@ export const FormLogin = () =>{
                             </div>
                         </section>
 
-                        <form className="relative h-full w-full flex flex-col items-center justify-center">
+                        <form onSubmit={iniciarSesion} className="relative h-full w-full flex flex-col items-center justify-center">
                             <div className="flex flex-col items-center justify-center w-full mb-5">
                                 <div className="flex items-center justify-center space-x-4">
                                     <div className="bg-[url('./src/assets/img/logo/Logo.png')] bg-cover w-[35px] h-[35px] md:w-[40px] md:h-[40px] xl:w-[3.3rem] xl:h-[3.2rem] rounded"></div>

@@ -82,3 +82,62 @@ export const columns_pedidos = [
         accessorKey: 'DateOfBird',
     }
 ]
+
+export const columns_pedidos_cant = [
+    {
+      header: "ID Cliente",
+      accessorKey: 'id_cliente',
+    },
+    {
+      header: "Nombre del Cliente",
+      accessorKey: 'nombre_cliente',
+    },
+    {
+      header: "Pedidos Realizados",
+      accessorKey: 'pedidos_realizados',
+    }
+  ]
+
+  export const columns_productos_comprados = [
+    {
+      header: "Cliente",
+      accessorKey: "nombre_cliente",
+    },
+    {
+      header: "Producto",
+      accessorKey: "nombre_producto",
+    },
+    {
+      header: "Cantidad Comprada",
+      accessorKey: "cantidad",
+    },
+    {
+      header: "Precio de Compra",
+      accessorKey: "precio_compra",
+    },
+    {
+      header: "Proveedor",
+      accessorKey: "nombre_proveedor",
+    }
+  ];
+
+  export const columns_prod_prov = [
+    {
+        header: "Codigo Producto",
+        accessorKey: "codigo_producto",
+    },
+
+    {
+    header: "Nombre Producto",
+    accessorKey: "nombre_producto",
+    },
+    {
+      header: "Nit Proveedor",
+      accessorKey: "nit_proveedor",
+    },
+    {
+      header: "Nombre Proveedor",
+      accessorKey: "nombre_proveedor",
+    }
+
+  ];

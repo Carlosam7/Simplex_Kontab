@@ -1,8 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TableComponent } from "../../../components/TableComponent"
 import { FormPerson } from "./FormPerson"
 import { columns_clientes } from "../hook/Tables"
-import { useEffect } from "react"
 
 export const Clientes = () => {
     const [data, setData] = useState([])
@@ -27,6 +26,11 @@ export const Clientes = () => {
             await getData()
         }
     }
+
+    useEffect(() => {
+        getData()
+    }, [])
+
     return (
         <>
 
